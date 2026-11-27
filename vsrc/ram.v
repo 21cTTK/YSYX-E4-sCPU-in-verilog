@@ -14,6 +14,8 @@ module ram (
     integer i, j, k;
     always @(*)
     begin   // Read logic
+        // set a default val to prevent latch
+        rdata = 12'bxxxxxxxxxxxx;
         for (i = 0; i < 2; i++)
         begin   // repeat for the two rdata outputs
             for (j = 0; j < 4; j++)
