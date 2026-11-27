@@ -7,7 +7,7 @@ module pc (
 	input      [7:0] wdata,
     output reg [7:0] out
 );
-	always(posedge clk, posedge arst)
+	always @(posedge clk or posedge arst)
 	begin
 		if (arst) 	  out <= 8'b0;
 		else if (en)  out <= wen ? wdata : out + 8'd1;

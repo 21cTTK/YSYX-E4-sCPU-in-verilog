@@ -11,7 +11,7 @@ module ram (
 );
     reg [5:0] dff[0:3]; // r0-3
 
-    integer i, j;
+    integer i, j, k;
     always @(*)
     begin   // Read logic
         for (i = 0; i < 2; i++)
@@ -29,9 +29,9 @@ module ram (
     begin
         if(arst)
         begin
-            for (i = 0; i < 4; i++)
+            for (k = 0; k < 4; k++)
             begin
-                dff[i] <= 6'b0;
+                dff[k] <= 6'b0;
             end
         end
         else if(en)
