@@ -1,6 +1,7 @@
 *
 !vsrc/
 !csrc/
+!build/obj_dir/auto_bind.cpp
 !Makefile
 !*.v
 !*.cpp
@@ -10,4 +11,4 @@
 !README.md
 !LICENSE
 !LICENSE.*
-
+!sCPU_pro.nxdc

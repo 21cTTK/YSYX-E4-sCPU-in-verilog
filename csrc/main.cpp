@@ -1,31 +1,35 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include "Vexample.h"
-#include "verilated.h"
+#include "VsCPU.h"
+#include <nvboard.h>
+#include <chrono>
+#include <thread>
 
-int main(int argc, char** argv) {
-	VerilatedContext* contextp = new VerilatedContext;
-    contextp->commandArgs(argc, argv);
-    contextp->traceEverOn(true);
+void nvboard_bind_all_pins(VsCPU* top);
 
-    Vexample top;
-
-    while (contextp->time() < 12) {
-        top.a = rand() & 1;
-        top.b = rand() & 1;
-
-        top.eval();
-
-        printf("a = %d, b = %d, f = %d\n",
-               top.a, top.b, top.f);
-
-        assert(top.f == (top.a ^ top.b));
-        contextp->timeInc(1);
-    }
-
+static void cycle(VsCPU& top) {
+    top.clk = 0;
     top.eval();
-    top.final();
-    return 0;
+    top.clk = 1;
+    top.eval();
 }
 
+int main(int argc, char** argv) {
+    Verilated::commandArgs(argc, argv);
+    VsCPU top;
+    top.en = 0;
+    top.btn = 0;
+    top.dpsw = 0;
+    top.arst = 1;
+    cycle(top);
+    top.arst = 0;
+    top.eval();
+
+    nvboard_bind_all_pins(&top);
+    nvboard_init();
+    while (nvboard_update()) {
+        cycle(top);
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    }
+    top.final();
+    nvboard_quit();
+    return 0;
+}
