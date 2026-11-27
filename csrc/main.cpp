@@ -25,9 +25,10 @@ int main(int argc, char** argv) {
 
     nvboard_bind_all_pins(&top);
     nvboard_init();
-    while (nvboard_update()) {
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(17));
+        if (!nvboard_update()) break;
         cycle(top);
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     top.final();
     nvboard_quit();
